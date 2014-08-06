@@ -9,10 +9,7 @@ import pylab as pl
 from sklearn import datasets
 from sklearn.utils import shuffle
 from sklearn.metrics import mean_squared_error
-from pybrain.structure import FeedForwardNetwork
-from pybrain.tools.shortcuts import buildNetwork
-from pybrain.datasets import SupervisedDataSet
-from pybrain.supervised.trainers import BackpropTrainer
+from neuralnets import NN
 
 # Load the boston dataset and seperate it into training and testing set
 boston = datasets.load_boston()
@@ -22,27 +19,18 @@ X_train, y_train = X[:offset], y[:offset]
 X_test, y_test = X[offset:], y[offset:]
 
 # We will test if the NN converges in 200 iterations
-max_epochs = range(0, 2000)
-train_err = zeros(len(max_epochs))
-test_err = zeros(len(max_epochs))
+max_epochs = 200
+train_err = zeros(max_epochs)
+test_err = zeros(max_epochs)
 
 # Build a network with 13 input nodes, 5 hidden nodes and 1 output nodes
 # The networks is fully connected - a node from a layer is connected to all nodes 
 # in its neighboring layer
-net = buildNetwork(13, 5, 1)
-# The dataset will have 13 features and 1 target label
-ds = SupervisedDataSet(13, 1)
+net = NN(13, 5, 1)
 
-# Convert the boston dataset into SupervisedDataset
-for i in range(1, len(X_train)):
-    ds.addSample(X_train[i], y_train[i])
-
-# Setup a trainer that will use backpropogation for training
-trainer = BackpropTrainer(net, ds)
-
-for i in max_epochs:
+for i in range(max_epochs):
 	# Run the backprop once
-    train_err[i] = trainer.train()
+    train_err[i] = net.train(X_train, y_train, num_epochs=1, verbose=False)
 
     # Find the labels for test set
     y = zeros(len(X_test))
@@ -56,9 +44,9 @@ for i in max_epochs:
 # Plot training and test error as a function of the number of epochs (iterations)
 pl.figure()
 pl.title('Neural Networks: Performance vs Num of Epochs')
-pl.plot(max_epochs, test_err, lw=2, label = 'test error')
-pl.plot(max_epochs, train_err, lw=2, label = 'training error')
+pl.plot(range(max_epochs), test_err, lw=2, label = 'test error')
+pl.plot(range(max_epochs), train_err, lw=2, label = 'training error')
 pl.legend()
 pl.xlabel('Number of Epochs')
-pl.ylabel('RMS Error')
+pl.ylabel('MS Error')
 pl.show()

@@ -20,6 +20,7 @@ class NN(object):
     """Create a neural network with random initial weights"""
     hidden, n_out = hidden[:-1], hidden[-1]
 
+    # Initialize the count of nodes in each layer
     self.layers = array((n_in,) + hidden + (n_out,))
     self.n_layers = len(self.layers)
 
@@ -27,11 +28,13 @@ class NN(object):
     self.activations = [ones(node_count) for node_count in self.layers]
     
     # Initialize weights between levels, and past changes for momentum
+    # Full connections between levels are used
     self.weight_shapes = zip(self.layers[1:], self.layers[:-1] + 1)
     self.weights = [random.uniform(-0.5, 0.5, shape) for shape in self.weight_shapes]
     self.past_change = [zeros(shape) for shape in self.weight_shapes]
 
     # Initialize scales used on training set
+    # Scaling helps prevent weights from growing extremely large or small
     self.input_mean = zeros(n_in)
     self.input_scale = ones(n_in)
     self.output_mean = zeros(n_out)
@@ -61,18 +64,22 @@ class NN(object):
     current_change = [zeros(shape) for shape in self.weight_shapes]
     
     error = self.activations[-1] - targets
-    # Return square error
+    # Compute square error for return
     err = dot(error * self.output_scale, error * self.output_scale) 
     deltas = error
 
     current_change[-1] = outer(deltas, append(self.activations[-2], 1.0))
 
+    # Compute the gradient with respect to each weight matrix using recurrence
+    # The heart of the backpropagation algorithm
     for i in reversed(xrange(self.n_layers - 2)):    
       error = self.weights[i + 1].T.dot(deltas)[:-1]
       deltas = dsigmoid(self.activations[i + 1]) * error
 
+      # Store the gradient with respect to the current layer's weights for update
       current_change[i] = outer(deltas, append(self.activations[i], 1.0))
 
+    # Update all weights by going in the opposite direction of the gradient
     for i in xrange(self.n_layers - 1):
       self.weights[i] -= M*self.past_change[i] + a*current_change[i]
       self.past_change[i] = current_change[i]
@@ -82,6 +89,7 @@ class NN(object):
   def train(self, data, targets, num_epochs=1000, a=0.02, M=0.002, e=0.000001, verbose=True):
     """Trains the neural network"""
 
+    # Compute and scale the dataset
     self.input_mean = data.mean(0)
     self.input_scale = data.std(0)
     self.output_mean = targets.mean(0)
@@ -90,16 +98,22 @@ class NN(object):
     data = (data - self.input_mean) / self.input_scale
     targets = (targets - self.output_mean) / self.output_scale
 
+    # Keep track of the error in each round of training
+    # If the error changes by less than e, neural network has converged, so halt training
     past_error = -2 * e
     error = 0.0
+
+    # In each epoch, train the neural network on the entire dataset
     for i in xrange(num_epochs):
       error = 0.0
       for x,y in zip(data, targets):
         self._activate(x)
         error += self.backPropagate(y, a, M)
+
       if verbose and i % max(num_epochs / 10, 1) == 0:
         print "Iteration: %s of %s, Error: %s" % (i, num_epochs, error / len(data))
       
+      # Halt if converged
       if abs(past_error - error) < e:
         if verbose:
           print "Converged on iteration %s of %s, Error: %s" % (i, num_epochs, error / len(data))

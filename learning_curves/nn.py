@@ -3,7 +3,6 @@ Plots Learning curves for Neural Networks
 Plot performance of NN when we change the size of the training set
 """
 
-import sys
 from numpy import *
 import pylab as pl
 from sklearn import datasets

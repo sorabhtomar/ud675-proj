@@ -1,7 +1,6 @@
 """
 Plots Performance of Neural Networks with number of epochs
 This is not for studying model complexity, but to see how long does it take for NN to converge
-We use pybrain (http://pybrain.org/) to design and train our NN
 """
 
 from numpy import *

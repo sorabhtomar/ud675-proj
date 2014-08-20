@@ -45,7 +45,7 @@ max_epochs = 50
 
 for i, net in enumerate(nets):
 	# Run backprop for max_epochs number of times
-	train_err[i] = net.train(X_test, y_test, num_epochs=50, verbose=False)
+	train_err[i] = net.train(X_test, y_test, num_epochs=max_epochs, verbose=False)
 
 	# Find the labels for test set
 	y = zeros(len(X_test))

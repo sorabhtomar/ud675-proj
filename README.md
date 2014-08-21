@@ -3,7 +3,7 @@ ud675-proj
 
 Coding Resources for Udacity ud675 course
 
-We have used Python scikit-learn and pybrain for analyzing the dataset. They implement many popular machine learning libraries. If you want to use these libraries, you will need to have some background in Python programming. However, the scikit documentation is a good resource  that can help you get started.
+We have used Python scikit-learn for analyzing the dataset. They implement many popular machine learning libraries. If you want to use these libraries, you will need to have some background in Python programming. However, the scikit documentation is a good resource  that can help you get started.
 
 
 Getting Started
@@ -11,7 +11,6 @@ Getting Started
 
 * You will need Python version 2.7.5 or up to get started. 
 * Install scikit-learn. Use [scikit-learn Installation Docs][3].
-* Install pybrain. Use [pybrain Installation Docs][4].
 * Download project files directly using the .tar.gz or .zip links above. 
 * Hack!
 
@@ -38,9 +37,7 @@ Getting Started
 
 * [scikit-learn Reference Docs][2]
 * [scikit-learn Installation Docs][3]
-* [pybrain Installation Docs][4]
 
 [1]: https://help.github.com/articles/using-pull-requests
 [2]: http://scikit-learn.org/stable/modules/classes.html
 [3]: http://scikit-learn.org/stable/install.html
-[4]: http://pybrain.org/docs/quickstart/installation.html

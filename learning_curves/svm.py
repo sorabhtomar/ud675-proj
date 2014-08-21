@@ -17,7 +17,7 @@ offset = int(0.7*len(X))
 X_train, y_train = X[:offset], y[:offset]
 X_test, y_test = X[offset:], y[offset:]
 
-# We will vary the training set size in increments of 20
+# We will vary the training set size so that we have 20 different sizes
 sizes = linspace(1, len(X_train), 20)
 train_err = zeros(len(sizes))
 test_err = zeros(len(sizes))
@@ -38,6 +38,6 @@ pl.plot(sizes, test_err, lw=2, label = 'test error')
 pl.plot(sizes, train_err, lw=2, label = 'training error')
 pl.legend()
 pl.xlabel('Training Size')
-pl.ylabel('RMS Error')
+pl.ylabel('MS Error')
 pl.show()
 
